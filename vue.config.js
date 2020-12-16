@@ -1,25 +1,26 @@
-const backendAddr = 'http://127.0.0.1:8000/'
-
 module.exports = {
-  outputDir: 'dist',
-  assetsDir: 'static',
-  devServer: {
-    proxy: {
-      '/api': {
-        target: backendAddr
+  "outputDir": "dist",
+  "assetsDir": "static",
+  "devServer": {
+    "proxy": {
+      "/api": {
+        "target": "http://127.0.0.1:8000/"
       },
-      '/admin/.*': {
-        target: backendAddr
+      "/admin/.*": {
+        "target": "http://127.0.0.1:8000/"
       },
-      '/admin$': {
-        target: backendAddr
+      "/admin$": {
+        "target": "http://127.0.0.1:8000/"
       },
-      '/static/rest_framework': {
-        target: backendAddr
+      "/static/rest_framework": {
+        "target": "http://127.0.0.1:8000/"
       },
-      '/media/': {
-        target: backendAddr
+      "/media/": {
+        "target": "http://127.0.0.1:8000/"
       }
     }
-  }
+  },
+  "transpileDependencies": [
+    "vuetify"
+  ]
 }
