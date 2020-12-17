@@ -1,17 +1,9 @@
 <template>
-  <v-card
-    v-if="class_.attributes.length"
-    :class="options.attribute.listClass"
-    outlined
-  >
-    <v-expansion-panels
-      v-for="(attribute, i) in class_.attributes"
-      :key="i"
-      focusable
-    >
-      <v-expansion-panel class="mb-2">
+  <v-card :class="options.class.class" outlined>
+    <v-expansion-panels>
+      <v-expansion-panel>
         <v-expansion-panel-header>
-          {{ 'Атрибут ' + attribute.id + ': ' + attribute.attributeName }}
+          {{ 'Класс: ' + class_.className }}
         </v-expansion-panel-header>
         <v-expansion-panel-content>
           <v-form @submit.prevent>
@@ -23,10 +15,10 @@
                   dense
                   type="text"
                   clear-icon="mdi-close-circle"
-                  v-model="attribute.attributeName"
-                  :rules="options.attribute.rules"
-                  :label="options.attribute.label"
-                  :prepend-inner-icon="options.attribute.icon"
+                  v-model="class_.className"
+                  :rules="options.class.rules"
+                  :label="options.class.label"
+                  :prepend-inner-icon="options.class.icon"
                 ></v-text-field>
               </v-col>
             </v-row>
@@ -42,7 +34,7 @@ import { mapState } from 'vuex'
 import { options } from '@/options'
 
 export default {
-  name: 'attributes-list',
+  name: 'class',
   data: () => ({
     options: options
   }),

@@ -12,7 +12,7 @@ export default new Vuex.Store({
     }
   },
   mutations: {
-    SET_CLASS(state, {entityName}) {
+    ADD_CLASS(state, {entityName}) {
       state.class.className = entityName
     },
     ADD_ATTRIBUTE(state, {entityName}) {

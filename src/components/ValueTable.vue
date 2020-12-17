@@ -1,51 +1,37 @@
 <template>
   <div>
-    <v-data-table :headers="headers" :items="desserts">
-      <template v-slot:item="props">
-        <v-edit-dialog
-          :return-value.sync="props.item.name"
-          @save="save"
-          @cancel="cancel"
-          @open="open"
-          @close="close"
-        >
-          {{ props.item.name }}
-          <template v-slot:input>
-            <v-text-field
-              v-model="props.item.name"
-              :rules="[max25chars]"
-              label="Edit"
-              single-line
-              counter
-            ></v-text-field>
-          </template>
-        </v-edit-dialog>
-      </template>
-      <template v-slot:iron="props">
-        <v-edit-dialog
-          :return-value.sync="props.item.iron"
-          large
-          persistent
-          @save="save"
-          @cancel="cancel"
-          @open="open"
-          @close="close"
-        >
-          <div>{{ props.item.iron }}</div>
-          <template v-slot:input>
-            <div class="mt-4 title">
-              Update Iron
-            </div>
-            <v-text-field
-              v-model="props.item.iron"
-              :rules="[max25chars]"
-              label="Edit"
-              single-line
-              counter
-              autofocus
-            ></v-text-field>
-          </template>
-        </v-edit-dialog>
+    <v-data-table
+      :headers="options.attributeValue.headers"
+      :items="class_.attributes"
+      hide-default-footer
+    >
+      <template v-slot:body="{ items, headers }">
+        <tbody>
+          <tr v-for="(item, i) in items" :key="i">
+            <td v-for="(header, key) in headers" :key="key">
+              <v-edit-dialog
+                :return-value.sync="item[header.value]"
+                @save="save"
+                @cancel="cancel"
+                @open="open"
+                @close="close"
+                cancel-text="Отмена"
+                save-text="Сохранить"
+                large
+              >
+                {{ item[header.value] }}
+                <template v-slot:input>
+                  <v-text-field
+                    v-model="item[header.value]"
+                    :label="item[header.label]"
+                    :rules="item[header.rules]"
+                    single-line
+                  ></v-text-field>
+                </template>
+              </v-edit-dialog>
+            </td>
+          </tr>
+        </tbody>
       </template>
     </v-data-table>
 
@@ -54,7 +40,7 @@
 
       <template v-slot:action="{ attrs }">
         <v-btn v-bind="attrs" text @click="snack = false">
-          Close
+          Закрыть
         </v-btn>
       </template>
     </v-snackbar>
@@ -62,6 +48,9 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+import { options } from '@/options'
+
 export default {
   name: 'value-table',
   data() {
@@ -69,123 +58,30 @@ export default {
       snack: false,
       snackColor: '',
       snackText: '',
-      max25chars: v => v.length <= 25 || 'Input too long!',
-      pagination: {},
-      headers: [
-        {
-          text: 'Dessert (100g serving)',
-          align: 'start',
-          sortable: false,
-          value: 'name'
-        },
-        { text: 'Calories', value: 'calories' },
-        { text: 'Fat (g)', value: 'fat' },
-        { text: 'Carbs (g)', value: 'carbs' },
-        { text: 'Protein (g)', value: 'protein' },
-        { text: 'Iron (%)', value: 'iron' }
-      ],
-      desserts: [
-        {
-          name: 'Frozen Yogurt',
-          calories: 159,
-          fat: 6.0,
-          carbs: 24,
-          protein: 4.0,
-          iron: '1%'
-        },
-        {
-          name: 'Ice cream sandwich',
-          calories: 237,
-          fat: 9.0,
-          carbs: 37,
-          protein: 4.3,
-          iron: '1%'
-        },
-        {
-          name: 'Eclair',
-          calories: 262,
-          fat: 16.0,
-          carbs: 23,
-          protein: 6.0,
-          iron: '7%'
-        },
-        {
-          name: 'Cupcake',
-          calories: 305,
-          fat: 3.7,
-          carbs: 67,
-          protein: 4.3,
-          iron: '8%'
-        },
-        {
-          name: 'Gingerbread',
-          calories: 356,
-          fat: 16.0,
-          carbs: 49,
-          protein: 3.9,
-          iron: '16%'
-        },
-        {
-          name: 'Jelly bean',
-          calories: 375,
-          fat: 0.0,
-          carbs: 94,
-          protein: 0.0,
-          iron: '0%'
-        },
-        {
-          name: 'Lollipop',
-          calories: 392,
-          fat: 0.2,
-          carbs: 98,
-          protein: 0,
-          iron: '2%'
-        },
-        {
-          name: 'Honeycomb',
-          calories: 408,
-          fat: 3.2,
-          carbs: 87,
-          protein: 6.5,
-          iron: '45%'
-        },
-        {
-          name: 'Donut',
-          calories: 452,
-          fat: 25.0,
-          carbs: 51,
-          protein: 4.9,
-          iron: '22%'
-        },
-        {
-          name: 'KitKat',
-          calories: 518,
-          fat: 26.0,
-          carbs: 65,
-          protein: 7,
-          iron: '6%'
-        }
-      ]
+      options: options
     }
   },
+  computed: mapState({
+    class_: state => state.class
+  }),
   methods: {
     save() {
       this.snack = true
       this.snackColor = 'success'
-      this.snackText = 'Data saved'
+      this.snackText = 'Сохранено'
     },
     cancel() {
       this.snack = true
       this.snackColor = 'error'
-      this.snackText = 'Canceled'
+      this.snackText = 'Отменено'
     },
     open() {
       this.snack = true
       this.snackColor = 'info'
-      this.snackText = 'Dialog opened'
+      this.snackText = 'Редактирование'
     },
     close() {
-      console.log('Dialog closed')
+      console.log('Редактирование закрыто')
     }
   }
 }

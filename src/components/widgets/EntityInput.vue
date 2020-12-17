@@ -11,7 +11,7 @@
           append-outer-icon="mdi-content-save"
           :prepend-inner-icon="entityOptions.icon"
           clear-icon="mdi-close-circle"
-          :rules="rules"
+          :rules="entityOptions.rules"
           v-model="entityName"
           @click:append-outer="saveEntity"
           @keyup.enter="saveEntity"
@@ -28,8 +28,7 @@ export default {
     entityOptions: Object
   },
   data: () => ({
-    entityName: null,
-    rules: [v => !!v || 'Поле должно быть заполнено']
+    entityName: ''
   }),
   methods: {
     saveEntity() {
