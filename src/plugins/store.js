@@ -3,26 +3,44 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
-export default new Vuex.Store({
-  state: {
+const getDefaultState = () => {
+  return {
     class: {
       className: null,
-      attributes: [],
-      template: null,
+      attributes: []
     }
-  },
-  mutations: {
-    ADD_CLASS(state, {entityName}) {
-      state.class.className = entityName
-    },
-    ADD_ATTRIBUTE(state, {entityName}) {
-      state.class.attributes.push({
-        id: state.class.attributes.length,
-        attributeName: entityName,
-        beforeValue: '',
-        value: '',
-        afterValue: ''
-      })
-    },
   }
+}
+
+const state = getDefaultState()
+
+const mutations = {
+  SET_CLASS(state, {name}) {
+    state.class.className = name
+  },
+  ADD_ATTRIBUTE(state, {name}) {
+    state.class.attributes.push({
+      attributeName: name,
+      beforeValue: '',
+      value: '',
+      afterValue: ''
+    })
+  },
+  EDIT_ATTRIBUTE(state, {name, i, value}) {
+    state.class.attributes[i][name] = value
+  },
+  SET_STATE(state, {newState}) {
+    console.log(newState)
+    state = newState
+    // Object.assign(state, newState)
+  },
+  RESET_STATE(state) {
+    Object.assign(state, getDefaultState())
+  }
+}
+
+export default new Vuex.Store({
+  state,
+  strict: true,
+  mutations
 })

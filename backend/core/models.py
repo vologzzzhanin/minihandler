@@ -1,3 +1,7 @@
 from django.db import models
+import jsonfield
 
-# Create your models here.
+
+class History(models.Model):
+    timestamp = models.DateTimeField(auto_now_add=True)
+    data = jsonfield.JSONField()

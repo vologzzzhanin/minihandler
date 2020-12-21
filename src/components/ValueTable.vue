@@ -7,26 +7,19 @@
     >
       <template v-slot:body="{ items, headers }">
         <tbody>
-          <tr v-for="(item, i) in items" :key="i">
+          <tr v-for="(attribute, i) in items" :key="i">
             <td v-for="(header, key) in headers" :key="key">
               <v-edit-dialog
-                :return-value.sync="item[header.value]"
-                @save="save"
+                @save="save(header.name, i, fieldValue)"
                 @cancel="cancel"
-                @open="open"
-                @close="close"
+                @open="open(attribute[header.name])"
                 cancel-text="Отмена"
                 save-text="Сохранить"
                 large
               >
-                {{ item[header.value] }}
+                {{ attribute[header.name] }}
                 <template v-slot:input>
-                  <v-text-field
-                    v-model="item[header.value]"
-                    :label="item[header.label]"
-                    :rules="item[header.rules]"
-                    single-line
-                  ></v-text-field>
+                  <v-text-field v-model="fieldValue" single-line></v-text-field>
                 </template>
               </v-edit-dialog>
             </td>
@@ -55,17 +48,23 @@ export default {
   name: 'value-table',
   data() {
     return {
+      options: options,
+      fieldValue: '',
       snack: false,
       snackColor: '',
-      snackText: '',
-      options: options
+      snackText: ''
     }
   },
   computed: mapState({
     class_: state => state.class
   }),
   methods: {
-    save() {
+    save(name, i, value) {
+      this.$store.commit(this.options.attribute.edit_action, {
+        name,
+        i,
+        value
+      })
       this.snack = true
       this.snackColor = 'success'
       this.snackText = 'Сохранено'
@@ -75,13 +74,11 @@ export default {
       this.snackColor = 'error'
       this.snackText = 'Отменено'
     },
-    open() {
+    open(value) {
+      this.fieldValue = value
       this.snack = true
       this.snackColor = 'info'
       this.snackText = 'Редактирование'
-    },
-    close() {
-      console.log('Редактирование закрыто')
     }
   }
 }

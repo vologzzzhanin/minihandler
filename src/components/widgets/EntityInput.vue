@@ -11,7 +11,7 @@
           append-outer-icon="mdi-content-save"
           :prepend-inner-icon="entityOptions.icon"
           clear-icon="mdi-close-circle"
-          :rules="entityOptions.rules"
+          :rules="rules"
           v-model="entityName"
           @click:append-outer="saveEntity"
           @keyup.enter="saveEntity"
@@ -28,16 +28,18 @@ export default {
     entityOptions: Object
   },
   data: () => ({
-    entityName: ''
+    entityName: '',
+    rules: []
   }),
   methods: {
     saveEntity() {
+      this.rules = this.entityOptions.rules
       let isValid = this.$refs.form.validate()
       if (!isValid) {
         return
       }
-      this.$store.commit(this.entityOptions.action, {
-        entityName: this.entityName
+      this.$store.commit(this.entityOptions.add_action, {
+        name: this.entityName
       })
       this.$refs.form.reset()
     }

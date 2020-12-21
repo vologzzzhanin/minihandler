@@ -1,5 +1,5 @@
 <template>
-  <v-card class="pa-2 yellow lighten-5" outlined>
+  <v-card class="pa-2 lime lighten-5" outlined>
     <v-form>
       <v-row>
         <v-col cols="12">
@@ -9,6 +9,17 @@
             solo
             readonly
             :value="classTemplate"
+          ></v-text-field>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col cols="12">
+          <v-text-field
+            outlined
+            dense
+            solo
+            readonly
+            :value="nameExample"
           ></v-text-field>
         </v-col>
       </v-row>
@@ -39,7 +50,7 @@ export default {
     nameExample() {
       let name = ''
       this.class_.attributes.forEach(
-        x => (name += `{${x.beforeValue}[${x.value}]${x.afterValue}}`)
+        x => (name += `${x.beforeValue}${x.value}${x.afterValue}`)
       )
       return name
     }

@@ -2,12 +2,13 @@ const rules = {
   required: v => !!v || 'Поле должно быть заполнено'
 }
 
-const options = {
+const options =  Object.freeze({
   class: {
     label: 'Наименование класса',
     icon: 'mdi-folder',
     request: 'Введите наименование класса',
-    action: 'ADD_CLASS',
+    add_action: 'SET_CLASS',
+    edit_action: 'SET_CLASS',
     rules: [rules.required],
     expanded: '0',
     class: 'pa-2 mb-2 blue lighten-5'
@@ -16,7 +17,8 @@ const options = {
     label: 'Наименование атрибута',
     icon: 'mdi-cog',
     request: 'Введите наименование атрибута',
-    action: 'ADD_ATTRIBUTE',
+    add_action: 'ADD_ATTRIBUTE',
+    edit_action: 'EDIT_ATTRIBUTE',
     rules: [rules.required],
     expanded: '0',
     class: 'pa-2 red lighten-5',
@@ -28,30 +30,30 @@ const options = {
         text: 'Атрибут',
         label: 'Введите наименование атрибута',
         align: 'start',
-        value: 'attributeName',
+        name: 'attributeName',
         rules: [rules.required]
       },
       {
         text: 'Текст до',
         label: 'Введите текст до значения',
         sortable: false,
-        value: 'beforeValue'
+        name: 'beforeValue'
       },
       {
         text: 'Значение',
         label: 'Введите текст значения',
         sortable: false,
-        value: 'value',
+        name: 'value',
         rules: [rules.required]
       },
       {
         text: 'Текст после',
         label: 'Введите текст после значения',
         sortable: false,
-        value: 'afterValue'
+        name: 'afterValue'
       }
     ]
   }
-}
+})
 
 export { options }

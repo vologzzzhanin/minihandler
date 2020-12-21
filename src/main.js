@@ -8,6 +8,9 @@ import App from './App.vue'
 
 Vue.config.productionTip = false
 
+axios.defaults.xsrfCookieName = 'csrftoken'
+axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
+
 Vue.use(Vuex)
 
 new Vue({

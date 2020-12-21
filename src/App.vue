@@ -1,13 +1,10 @@
 <template>
   <v-app id="inspire">
-    <v-navigation-drawer v-model="drawer" app class="orange lighten-5">
+    <v-navigation-drawer v-model="drawer" app class="deep-purple lighten-5">
       <v-container>
         <v-row>
           <v-col cols="12">
-            <div>
-              <h3>История</h3>
-            </div>
-            <History />
+            <History :history="history" />
           </v-col>
         </v-row>
       </v-container>
@@ -50,18 +47,21 @@
             <TemplateForm />
           </v-col>
         </v-row>
+        <Manage />
       </v-container>
     </v-main>
   </v-app>
 </template>
 
 <script>
+import axios from 'axios'
 import InputForm from '@/components/InputForm'
 import AttributesList from '@/components/AttributesList'
 import Class from '@/components/Class'
 import ValueTable from '@/components/ValueTable'
 import TemplateForm from '@/components/TemplateForm'
 import History from '@/components/History'
+import Manage from '@/components/Manage'
 import { mapState } from 'vuex'
 import { options } from '@/options'
 
@@ -73,11 +73,13 @@ export default {
     AttributesList,
     ValueTable,
     TemplateForm,
-    History
+    History,
+    Manage
   },
   data: () => ({
     drawer: null,
-    options: options
+    options: options,
+    history: null
   }),
   computed: {
     ...mapState({
@@ -86,6 +88,17 @@ export default {
     attributesLength() {
       return this.class_.attributes.length
     }
+  },
+  created() {
+    axios
+      .get('api/v1/get_history')
+      .then(responce => {
+        this.history = responce.data.history
+        console.log(this.history)
+      })
+      .catch(e => {
+        console.log(e)
+      })
   }
 }
 </script>

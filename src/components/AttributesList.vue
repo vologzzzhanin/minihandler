@@ -11,7 +11,7 @@
     >
       <v-expansion-panel class="mb-2">
         <v-expansion-panel-header>
-          {{ 'Атрибут ' + attribute.id + ': ' + attribute.attributeName }}
+          {{ 'Атрибут ' + i + ': ' + attribute.attributeName }}
         </v-expansion-panel-header>
         <v-expansion-panel-content>
           <v-form @submit.prevent>
