@@ -3,6 +3,7 @@ from django.urls import path
 from backend.core import views
 
 urlpatterns = [
-    path('make_history', views.make_history),
-    path('get_history', views.get_history)
+    path('save_class', views.save_class),
+    path('get_class_list', views.get_class_list),
+    path('delete_class', views.delete_class)
 ]

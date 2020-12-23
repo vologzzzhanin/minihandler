@@ -1,9 +1,9 @@
 <template>
-  <v-card :class="options.class.class" outlined>
-    <v-expansion-panels>
+  <v-card :class="classOptions.class" outlined>
+    <v-expansion-panels v-model="expanded">
       <v-expansion-panel>
         <v-expansion-panel-header>
-          {{ 'Класс: ' + class_.className }}
+          {{ 'Класс: ' + className }}
         </v-expansion-panel-header>
         <v-expansion-panel-content>
           <v-form @submit.prevent>
@@ -15,10 +15,13 @@
                   dense
                   type="text"
                   clear-icon="mdi-close-circle"
-                  v-model="class_.className"
-                  :rules="options.class.rules"
-                  :label="options.class.label"
-                  :prepend-inner-icon="options.class.icon"
+                  v-model="className"
+                  :rules="classOptions.rules"
+                  :label="classOptions.label"
+                  :prepend-inner-icon="classOptions.icon"
+                  append-outer-icon="mdi-content-save"
+                  @click:append-outer="saveClassName"
+                  @keyup.enter="saveClassName"
                 ></v-text-field>
               </v-col>
             </v-row>
@@ -30,16 +33,29 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
 import { options } from '@/options'
 
 export default {
   name: 'class',
   data: () => ({
-    options: options
+    expanded: null,
+    className: '',
+    classOptions: options.class
   }),
-  computed: mapState({
-    class_: state => state.class
-  })
+  created() {
+    this.className = this.$store.state.class.data.className
+  },
+  methods: {
+    closePanel() {
+      this.expanded = null
+    },
+    saveClassName() {
+      this.$store.dispatch('setEntity', {
+        entitySetting: this.classOptions.editAction,
+        entityName: this.className
+      })
+      this.closePanel()
+    }
+  }
 }
 </script>

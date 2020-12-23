@@ -28,29 +28,15 @@
 </template>
 
 <script>
-import axios from 'axios'
-import { mapState } from 'vuex'
-
 export default {
   name: 'manage',
-  props: {
-    entityOptions: Object
-  },
   methods: {
     saveClass() {
-      axios
-        .post('api/v1/make_history', this.class_)
-        .then(responce => {})
-        .catch(e => {
-          console.log(e)
-        })
+      this.$store.dispatch('saveClass')
     },
     resetClass() {
-      this.$store.commit('RESET_STATE')
+      this.$store.dispatch('resetClass')
     }
-  },
-  computed: mapState({
-    class_: state => state.class
-  })
+  }
 }
 </script>

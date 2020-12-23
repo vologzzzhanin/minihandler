@@ -1,17 +1,16 @@
 <template>
-  <v-card
-    v-if="class_.attributes.length"
-    :class="options.attribute.listClass"
-    outlined
-  >
+  <v-card v-if="attributes.length" :class="attributeOptions.listClass" outlined>
     <v-expansion-panels
-      v-for="(attribute, i) in class_.attributes"
-      :key="i"
+      v-for="(attribute, index) in attributes"
+      :key="index"
       focusable
     >
-      <v-expansion-panel class="mb-2">
+      <v-expansion-panel
+        class="mb-2"
+        @click="attributeName = attribute.attributeName"
+      >
         <v-expansion-panel-header>
-          {{ 'Атрибут ' + i + ': ' + attribute.attributeName }}
+          {{ 'Атрибут ' + (index + 1) + ': ' + attribute.attributeName }}
         </v-expansion-panel-header>
         <v-expansion-panel-content>
           <v-form @submit.prevent>
@@ -23,10 +22,12 @@
                   dense
                   type="text"
                   clear-icon="mdi-close-circle"
-                  v-model="attribute.attributeName"
-                  :rules="options.attribute.rules"
-                  :label="options.attribute.label"
-                  :prepend-inner-icon="options.attribute.icon"
+                  v-model="attributeName"
+                  :rules="attributeOptions.rules"
+                  :label="attributeOptions.label"
+                  :prepend-inner-icon="attributeOptions.icon"
+                  append-outer-icon="mdi-content-save"
+                  @input="saveAttributeName(index, attributeName)"
                 ></v-text-field>
               </v-col>
             </v-row>
@@ -44,10 +45,20 @@ import { options } from '@/options'
 export default {
   name: 'attributes-list',
   data: () => ({
-    options: options
+    attributeName: '',
+    attributeOptions: options.attribute
   }),
   computed: mapState({
-    class_: state => state.class
-  })
+    attributes: state => state.class.data.attributes
+  }),
+  methods: {
+    saveAttributeName(index, value) {
+      this.$store.dispatch('editAttribute', {
+        fieldName: 'attributeName',
+        index,
+        value
+      })
+    }
+  }
 }
 </script>

@@ -37,11 +37,11 @@ export default {
   }),
   computed: {
     ...mapState({
-      class_: state => state.class
+      attributes: state => state.class.data.attributes
     }),
     classTemplate() {
       let template = ''
-      this.class_.attributes.forEach(
+      this.attributes.forEach(
         x =>
           (template += `{${x.beforeValue}[${x.attributeName}]${x.afterValue}}`)
       )
@@ -49,7 +49,7 @@ export default {
     },
     nameExample() {
       let name = ''
-      this.class_.attributes.forEach(
+      this.attributes.forEach(
         x => (name += `${x.beforeValue}${x.value}${x.afterValue}`)
       )
       return name

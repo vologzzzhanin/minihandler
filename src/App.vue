@@ -1,13 +1,7 @@
 <template>
   <v-app id="inspire">
     <v-navigation-drawer v-model="drawer" app class="deep-purple lighten-5">
-      <v-container>
-        <v-row>
-          <v-col cols="12">
-            <History :history="history" />
-          </v-col>
-        </v-row>
-      </v-container>
+      <ClassList />
     </v-navigation-drawer>
 
     <v-app-bar app>
@@ -23,8 +17,8 @@
             <div>
               <h3>Таксономия</h3>
             </div>
-            <div v-if="!class_.className">
-              <InputForm v-if="!class_.className" :option="options.class" />
+            <div v-if="showClass">
+              <InputForm :option="options.class" />
             </div>
             <div v-else>
               <Class />
@@ -32,14 +26,14 @@
               <InputForm :option="options.attribute" />
             </div>
           </v-col>
-          <v-col cols="6" v-if="attributesLength">
+          <v-col cols="6" v-if="showAttributes">
             <div>
               <h3>Значения атрибутов</h3>
             </div>
             <ValueTable />
           </v-col>
         </v-row>
-        <v-row v-if="attributesLength">
+        <v-row v-if="showAttributes">
           <v-col cols="12">
             <div>
               <h3>Шаблон</h3>
@@ -60,7 +54,7 @@ import AttributesList from '@/components/AttributesList'
 import Class from '@/components/Class'
 import ValueTable from '@/components/ValueTable'
 import TemplateForm from '@/components/TemplateForm'
-import History from '@/components/History'
+import ClassList from '@/components/ClassList'
 import Manage from '@/components/Manage'
 import { mapState } from 'vuex'
 import { options } from '@/options'
@@ -73,32 +67,23 @@ export default {
     AttributesList,
     ValueTable,
     TemplateForm,
-    History,
+    ClassList,
     Manage
   },
   data: () => ({
     drawer: null,
-    options: options,
-    history: null
+    options: options
   }),
   computed: {
-    ...mapState({
-      class_: state => state.class
-    }),
-    attributesLength() {
-      return this.class_.attributes.length
+    showClass() {
+      return !this.$store.state.class.data.className
+    },
+    showAttributes() {
+      return this.$store.state.class.data.attributes.length > 0
     }
   },
   created() {
-    axios
-      .get('api/v1/get_history')
-      .then(responce => {
-        this.history = responce.data.history
-        console.log(this.history)
-      })
-      .catch(e => {
-        console.log(e)
-      })
+    this.$store.dispatch('getClassList')
   }
 }
 </script>

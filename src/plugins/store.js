@@ -1,46 +1,115 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import axios from 'axios'
 
 Vue.use(Vuex)
 
-const getDefaultState = () => {
+const getDefaultClass = () => {
   return {
-    class: {
-      className: null,
+    classId: '',
+    data: {
+      className: '',
       attributes: []
     }
   }
 }
 
-const state = getDefaultState()
+const state = {
+  class: getDefaultClass(),
+  classList: [],
+  loading: false
+}
 
 const mutations = {
-  SET_CLASS(state, {name}) {
-    state.class.className = name
+  SET_LOADING(state, loading) {
+    state.loading = loading
   },
-  ADD_ATTRIBUTE(state, {name}) {
-    state.class.attributes.push({
-      attributeName: name,
+  SET_CLASS_LIST(state, classList) {
+    state.classList = classList
+  },
+  EDIT_CLASS_NAME(state, className) {
+    state.class.data.className = className
+  },
+  ADD_ATTRIBUTE(state, attributeName) {
+    state.class.data.attributes.push({
+      attributeName: attributeName,
       beforeValue: '',
       value: '',
       afterValue: ''
     })
   },
-  EDIT_ATTRIBUTE(state, {name, i, value}) {
-    state.class.attributes[i][name] = value
+  EDIT_ATTRIBUTE(state, { fieldName, index, value }) {
+    state.class.data.attributes[index][fieldName] = value
   },
-  SET_STATE(state, {newState}) {
-    console.log(newState)
-    state = newState
-    // Object.assign(state, newState)
+  SET_CLASS(state, { classId, classData }) {
+    state.class.classId = classId
+    state.class.data = classData
   },
-  RESET_STATE(state) {
-    Object.assign(state, getDefaultState())
+  RESET_CLASS(state) {
+    Object.assign(state.class, getDefaultClass())
+  }
+}
+
+const actions = {
+  getClassList({ commit }) {
+    commit('SET_LOADING', true)
+    axios
+      .get('api/v1/get_class_list')
+      .then(response => {
+        commit('SET_CLASS_LIST', response.data.class_list)
+        commit('SET_LOADING', false)
+      })
+      .catch(e => {
+        console.log(e)
+      })
+  },
+  setEntity({ commit }, { entitySetting, entityName }) {
+    commit(entitySetting, entityName)
+  },
+  editAttribute({ commit }, { fieldName, index, value }) {
+    commit('EDIT_ATTRIBUTE', { fieldName, index, value })
+  },
+  saveClass({ commit, dispatch }) {
+    axios
+      .post('api/v1/save_class', {
+        id: state.class.classId,
+        data: state.class.data
+      })
+      .then(response => {
+        let classId = response.data.class_id
+        let classData = response.data.class_data
+        commit('SET_CLASS', { classId, classData })
+        dispatch('getClassList')
+      })
+      .catch(e => {
+        console.log(e)
+      })
+  },
+  selectClass({ commit }, id) {
+    let cls = state.classList.find(x => x.id === id)
+    commit('SET_CLASS', {
+      classId: id,
+      classData: cls.data
+    })
+  },
+  deleteClass({ dispatch }, id) {
+    axios
+      .post('api/v1/delete_class', id)
+      .then(response => {
+        dispatch('getClassList')
+      })
+      .catch(e => {
+        console.log(e)
+      })
+  },
+  resetClass({ commit }) {
+    commit('RESET_CLASS')
   }
 }
 
 export default new Vuex.Store({
   state,
   strict: true,
-  mutations
+  mutations,
+  actions
 })

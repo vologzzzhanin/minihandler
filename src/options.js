@@ -7,8 +7,8 @@ const options =  Object.freeze({
     label: 'Наименование класса',
     icon: 'mdi-folder',
     request: 'Введите наименование класса',
-    add_action: 'SET_CLASS',
-    edit_action: 'SET_CLASS',
+    addAction: 'EDIT_CLASS_NAME',
+    editAction: 'EDIT_CLASS_NAME',
     rules: [rules.required],
     expanded: '0',
     class: 'pa-2 mb-2 blue lighten-5'
@@ -17,14 +17,12 @@ const options =  Object.freeze({
     label: 'Наименование атрибута',
     icon: 'mdi-cog',
     request: 'Введите наименование атрибута',
-    add_action: 'ADD_ATTRIBUTE',
-    edit_action: 'EDIT_ATTRIBUTE',
+    addAction: 'ADD_ATTRIBUTE',
+    editAction: 'EDIT_ATTRIBUTE',
     rules: [rules.required],
     expanded: '0',
     class: 'pa-2 red lighten-5',
-    listClass: 'pt-2 px-2 mb-2 green lighten-5'
-  },
-  attributeValue: {
+    listClass: 'pt-2 px-2 mb-2 green lighten-5',
     headers: [
       {
         text: 'Атрибут',

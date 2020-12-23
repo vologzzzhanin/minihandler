@@ -1,16 +1,16 @@
 <template>
   <div>
     <v-data-table
-      :headers="options.attributeValue.headers"
-      :items="class_.attributes"
+      :headers="attributeOptions.headers"
+      :items="attributes"
       hide-default-footer
     >
       <template v-slot:body="{ items, headers }">
         <tbody>
-          <tr v-for="(attribute, i) in items" :key="i">
+          <tr v-for="(attribute, index) in items" :key="index">
             <td v-for="(header, key) in headers" :key="key">
               <v-edit-dialog
-                @save="save(header.name, i, fieldValue)"
+                @save="save(header.name, index, fieldValue)"
                 @cancel="cancel"
                 @open="open(attribute[header.name])"
                 cancel-text="Отмена"
@@ -48,7 +48,7 @@ export default {
   name: 'value-table',
   data() {
     return {
-      options: options,
+      attributeOptions: options.attribute,
       fieldValue: '',
       snack: false,
       snackColor: '',
@@ -56,15 +56,12 @@ export default {
     }
   },
   computed: mapState({
-    class_: state => state.class
+    attributes: state => state.class.data.attributes
   }),
   methods: {
-    save(name, i, value) {
-      this.$store.commit(this.options.attribute.edit_action, {
-        name,
-        i,
-        value
-      })
+    save(fieldName, index, value) {
+      this.$store.dispatch('editAttribute', { fieldName, index, value })
+
       this.snack = true
       this.snackColor = 'success'
       this.snackText = 'Сохранено'
@@ -76,6 +73,7 @@ export default {
     },
     open(value) {
       this.fieldValue = value
+
       this.snack = true
       this.snackColor = 'info'
       this.snackText = 'Редактирование'

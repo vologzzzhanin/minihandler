@@ -38,8 +38,9 @@ export default {
       if (!isValid) {
         return
       }
-      this.$store.commit(this.entityOptions.add_action, {
-        name: this.entityName
+      this.$store.dispatch('setEntity', {
+        entitySetting: this.entityOptions.addAction,
+        entityName: this.entityName
       })
       this.$refs.form.reset()
     }
