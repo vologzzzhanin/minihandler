@@ -1,9 +1,38 @@
 import json
 from .models import Class
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import ensure_csrf_cookie
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 
 
+def login_view(request):
+    try:
+        body = json.loads(request.body)
+        email, password = body['email'], body['password']
+        user = authenticate(email=email, password=password)
+        if user is not None:
+            login(request, user)
+            message = 'Вы успешно авторизовались'
+            status = 200
+        else:
+            message = 'Проверьте правильность ввода Email и пароля'
+            status = 403
+        result = {'message': message}
+        return JsonResponse(result, status=status)
+    except Exception as e:
+        status = 500
+        result = {'error': str(e)}
+        return JsonResponse(result, status=status)
+
+
+def logout_view(request):
+    logout(request)
+    status = 200
+    return HttpResponse(status=status)
+
+
+@login_required
 def save_class(request):
     try:
         body = json.loads(request.body)
@@ -24,8 +53,10 @@ def save_class(request):
     return JsonResponse(result, status=status)
 
 
+@login_required
 @ensure_csrf_cookie
 def get_class_list(request):
+    print(request.user)
     class_list = Class.objects.values().order_by(
         '-timestamp'
     )[:10]
@@ -34,6 +65,7 @@ def get_class_list(request):
     })
 
 
+@login_required
 def delete_class(request):
     try:
         id = json.loads(request.body)

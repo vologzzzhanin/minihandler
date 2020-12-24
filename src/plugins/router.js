@@ -1,19 +1,20 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-import App from '@/App.vue'
-import Login from '@/Login.vue'
+import Main from '@/views/Main'
+import Login from '@/views/Login'
 
 Vue.use(Router)
 
 const routes = [
   { path: '/', redirect: '/login' },
+  { path: '/logout', name: 'logout', redirect: '/login' },
   { path: '/login', component: Login },
-  { path: '/app', component: App },
-  // { path: '/logout', component: Logout },
+  { path: '/app', name: 'app', component: Main },
 ]
 
 const router = new Router({
+  mode: 'history',
   routes
 })
 

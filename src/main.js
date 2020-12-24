@@ -6,7 +6,6 @@ import vuetify from './plugins/vuetify'
 import store from './plugins/store'
 import router from './plugins/router'
 import App from './App.vue'
-import Login from './Login.vue'
 import { defaultFilter, localeFilter } from './filters/dateFilters'
 
 Vue.config.productionTip = false
@@ -24,5 +23,5 @@ new Vue({
   axios,
   vuetify,
   store,
-  render: h => h(Login)
+  render: h => h(App)
 }).$mount('#app')

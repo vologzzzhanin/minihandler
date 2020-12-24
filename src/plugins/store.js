@@ -54,7 +54,7 @@ const actions = {
   getClassList({ commit }) {
     commit('SET_LOADING', true)
     axios
-      .get('api/v1/get_class_list')
+      .get('/api/v1/get_class_list')
       .then(response => {
         commit('SET_CLASS_LIST', response.data.class_list)
         commit('SET_LOADING', false)
@@ -71,7 +71,7 @@ const actions = {
   },
   saveClass({ commit, dispatch }) {
     axios
-      .post('api/v1/save_class', {
+      .post('/api/v1/save_class', {
         id: state.class.classId,
         data: state.class.data
       })
@@ -94,7 +94,7 @@ const actions = {
   },
   deleteClass({ dispatch }, id) {
     axios
-      .post('api/v1/delete_class', id)
+      .post('/api/v1/delete_class', id)
       .then(response => {
         dispatch('getClassList')
       })
