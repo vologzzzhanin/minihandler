@@ -1,5 +1,5 @@
 <template>
-  <v-app id="inspire">
+  <v-app>
     <v-navigation-drawer v-model="drawer" app class="deep-purple lighten-5">
       <ClassList />
     </v-navigation-drawer>

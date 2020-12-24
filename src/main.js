@@ -4,8 +4,10 @@ import axios from 'axios'
 
 import vuetify from './plugins/vuetify'
 import store from './plugins/store'
+import router from './plugins/router'
 import App from './App.vue'
-import { defaultFilter, localeFilter } from '@/filters/dateFilters'
+import Login from './Login.vue'
+import { defaultFilter, localeFilter } from './filters/dateFilters'
 
 Vue.config.productionTip = false
 
@@ -18,8 +20,9 @@ Vue.filter('date', defaultFilter)
 Vue.filter('localeDate', localeFilter)
 
 new Vue({
+  router,
   axios,
   vuetify,
   store,
-  render: h => h(App)
+  render: h => h(Login)
 }).$mount('#app')
