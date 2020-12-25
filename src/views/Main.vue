@@ -9,7 +9,11 @@
 
       <v-toolbar-title>Пример генерации шаблона</v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn outlined color="error" @click="logout()">
+      <v-btn
+        @click="logout"
+        class="deep-orange--text text--darken-5"
+        color="deep-orange lighten-3"
+      >
         Выйти
       </v-btn>
     </v-app-bar>
@@ -61,10 +65,10 @@ import TemplateForm from '@/components/TemplateForm'
 import ClassList from '@/components/ClassList'
 import Manage from '@/components/Manage'
 import { mapState } from 'vuex'
-import { options } from '@/options'
+import { options } from '@/plugins/options'
 
 export default {
-  name: 'main',
+  name: 'main-layout',
   components: {
     InputForm,
     Class,
@@ -94,6 +98,8 @@ export default {
       axios
         .post('/api/v1/logout')
         .then(response => {
+          this.$store.dispatch('setIsAuthenticated', false)
+
           this.$router.push('logout')
         })
         .catch(error => {

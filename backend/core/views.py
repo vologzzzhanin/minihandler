@@ -3,7 +3,15 @@ from .models import Class
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
+
+
+def login_required(function):
+    """Проверка логина"""
+    def wrapper(request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return HttpResponse(status=403)
+        return function(request, *args, **kwargs)
+    return wrapper
 
 
 def login_view(request):
@@ -28,8 +36,7 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
-    status = 200
-    return HttpResponse(status=status)
+    return HttpResponse(status=200)
 
 
 @login_required
@@ -56,7 +63,6 @@ def save_class(request):
 @login_required
 @ensure_csrf_cookie
 def get_class_list(request):
-    print(request.user)
     class_list = Class.objects.values().order_by(
         '-timestamp'
     )[:10]

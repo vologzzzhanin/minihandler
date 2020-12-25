@@ -40,7 +40,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import { options } from '@/options'
+import { options } from '@/plugins/options'
 
 export default {
   name: 'attributes-list',

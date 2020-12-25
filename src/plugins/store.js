@@ -2,6 +2,8 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
 
+import router from '@/plugins/router'
+
 Vue.use(Vuex)
 
 const getDefaultClass = () => {
@@ -17,10 +19,14 @@ const getDefaultClass = () => {
 const state = {
   class: getDefaultClass(),
   classList: [],
-  loading: false
+  loading: false,
+  isAuthenticated: false
 }
 
 const mutations = {
+  SET_IS_AUTHENTICATED(state, isAuthenticated) {
+    state.isAuthenticated = isAuthenticated
+  },
   SET_LOADING(state, loading) {
     state.loading = loading
   },
@@ -51,6 +57,9 @@ const mutations = {
 }
 
 const actions = {
+  setIsAuthenticated({ commit }, isAuthenticated) {
+    commit('SET_IS_AUTHENTICATED', isAuthenticated)
+  },
   getClassList({ commit }) {
     commit('SET_LOADING', true)
     axios

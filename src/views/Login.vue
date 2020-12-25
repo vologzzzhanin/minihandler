@@ -1,30 +1,42 @@
 <template>
   <v-app>
-    <v-container>
-      <v-row>
-        <v-col cols="12">
-          <v-card class="px-2">
+    <v-container fill-height>
+      <v-row justify="center" align-content="center">
+        <v-col cols="4">
+          <v-card>
             <v-card-title primary-title>
               <h4>Вход</h4>
             </v-card-title>
-            <v-form>
-              <v-text-field
-                prepend-icon="mdi-account"
-                name="Email"
-                label="Email"
-                v-model="email"
-              ></v-text-field>
-              <v-text-field
-                prepend-icon="mdi-lock"
-                name="Password"
-                label="Пароль"
-                type="password"
-                v-model="password"
-              ></v-text-field>
-              <v-card-actions>
-                <v-btn primary large block @click="login">Войти</v-btn>
-              </v-card-actions>
-            </v-form>
+            <v-card-text>
+              <v-form>
+                <v-text-field
+                  prepend-icon="mdi-account"
+                  name="Email"
+                  label="Email"
+                  v-model="email"
+                  @keyup.enter="login"
+                ></v-text-field>
+                <v-text-field
+                  prepend-icon="mdi-lock"
+                  name="Password"
+                  label="Пароль"
+                  type="password"
+                  v-model="password"
+                  @keyup.enter="login"
+                ></v-text-field>
+                <v-card-actions>
+                  <v-btn
+                    large
+                    block
+                    @click="login"
+                    class="deep-orange--text text--darken-5"
+                    color="deep-orange lighten-3"
+                  >
+                    Войти
+                  </v-btn>
+                </v-card-actions>
+              </v-form>
+            </v-card-text>
           </v-card>
         </v-col>
       </v-row>
@@ -59,6 +71,8 @@ export default {
           password: this.password
         })
         .then(response => {
+          this.$store.dispatch('setIsAuthenticated', true)
+
           this.message = response.data.message
           this.snackColor = 'success'
           this.snack = true
