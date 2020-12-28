@@ -5,6 +5,11 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from django.contrib.auth import authenticate, login, logout
 
 
+@ensure_csrf_cookie
+def get_token(request):
+    return HttpResponse(status=200)
+
+
 def login_required(function):
     """Проверка логина"""
     def wrapper(request, *args, **kwargs):
@@ -61,7 +66,6 @@ def save_class(request):
 
 
 @login_required
-@ensure_csrf_cookie
 def get_class_list(request):
     class_list = Class.objects.values().order_by(
         '-timestamp'

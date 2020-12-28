@@ -11,7 +11,7 @@
               <v-list-item
                 v-for="(cls, i) in classList"
                 :key="i"
-                @click="selectClass(cls.id)"
+                @click="$store.dispatch('selectClass', cls.id)"
               >
                 <v-list-item-content>
                   <v-list-item-title>
@@ -25,7 +25,11 @@
                     {{ cls.timestamp | date }}
                   </v-list-item-subtitle>
                 </v-list-item-content>
-                <v-btn icon x-small @click="deleteClass(cls.id)">
+                <v-btn
+                  icon
+                  x-small
+                  @click="$store.dispatch('deleteClass', cls.id)"
+                >
                   <v-icon>
                     mdi-close
                   </v-icon>
@@ -44,14 +48,6 @@ import { mapState } from 'vuex'
 
 export default {
   name: 'class-list',
-  computed: mapState(['classList']),
-  methods: {
-    selectClass(id) {
-      this.$store.dispatch('selectClass', id)
-    },
-    deleteClass(id) {
-      this.$store.dispatch('deleteClass', id)
-    }
-  }
+  computed: mapState(['classList'])
 }
 </script>

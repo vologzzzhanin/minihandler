@@ -41,8 +41,8 @@
         </v-col>
       </v-row>
     </v-container>
-    <v-snackbar v-model="snack" :timeout="3000" :color="snackColor">
-      {{ message }}
+    <v-snackbar v-model="snack" :timeout="3000" color="info">
+      {{ loginMassage }}
 
       <v-btn text @click="snack = false">
         Закрыть
@@ -52,44 +52,29 @@
 </template>
 
 <script>
-import axios from 'axios'
-
 export default {
   name: 'login',
   data: () => ({
     email: '',
-    password: '',
-    message: '',
-    snack: false,
-    snackColor: ''
+    password: ''
   }),
+  created() {
+    if (process.env.NODE_ENV === 'development') axios.get('/api/v1/get_token')
+  },
+  computed: {
+    loginMassage() {
+      return this.$store.state.loginMassage
+    },
+    snack() {
+      return this.$store.state.loginMassage.length > 0
+    }
+  },
   methods: {
     login() {
-      axios
-        .post('/api/v1/login', {
-          email: this.email,
-          password: this.password
-        })
-        .then(response => {
-          this.$store.dispatch('setIsAuthenticated', true)
-
-          this.message = response.data.message
-          this.snackColor = 'success'
-          this.snack = true
-
-          this.$router.push('app')
-        })
-        .catch(error => {
-          if (error.response) {
-            this.message = error.response.data.message
-            this.snackColor = 'info'
-            this.snack = true
-          } else {
-            this.message = error
-            this.snackColor = 'error'
-            this.snack = true
-          }
-        })
+      this.$store.dispatch('login', {
+        email: this.email,
+        password: this.password
+      })
     }
   }
 }

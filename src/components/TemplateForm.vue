@@ -32,9 +32,6 @@ import { mapState } from 'vuex'
 
 export default {
   name: 'template-form',
-  data: () => ({
-    // options: options
-  }),
   computed: {
     ...mapState({
       attributes: state => state.class.data.attributes

@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
 
-import router from '@/plugins/router'
+import router from './router'
 
 Vue.use(Vuex)
 
@@ -19,16 +19,16 @@ const getDefaultClass = () => {
 const state = {
   class: getDefaultClass(),
   classList: [],
-  loading: false,
-  isAuthenticated: false
+  isAuthenticated: localStorage.getItem('isAuthenticated') || 'false',
+  loginMassage: ''
 }
 
 const mutations = {
   SET_IS_AUTHENTICATED(state, isAuthenticated) {
     state.isAuthenticated = isAuthenticated
   },
-  SET_LOADING(state, loading) {
-    state.loading = loading
+  SET_LOGIN_MESSAGE(state, loginMassage) {
+    state.loginMassage = loginMassage
   },
   SET_CLASS_LIST(state, classList) {
     state.classList = classList
@@ -60,13 +60,43 @@ const actions = {
   setIsAuthenticated({ commit }, isAuthenticated) {
     commit('SET_IS_AUTHENTICATED', isAuthenticated)
   },
+  login({ commit, dispatch }, { email, password }) {
+    axios
+      .post('/api/v1/login', { email, password })
+      .then(response => {
+        localStorage.setItem('isAuthenticated', 'true')
+        dispatch('setIsAuthenticated', 'true')
+
+        commit('SET_LOGIN_MESSAGE', response.data.message)
+
+        router.push('home')
+      })
+      .catch(error => {
+        if (error.response) {
+          commit('SET_LOGIN_MESSAGE', error.response.data.message)
+        } else {
+          commit('SET_LOGIN_MESSAGE', error)
+        }
+      })
+  },
+  logout({ dispatch }) {
+    axios
+      .post('/api/v1/logout')
+      .then(() => {
+        localStorage.setItem('isAuthenticated', 'false')
+        dispatch('setIsAuthenticated', 'false')
+
+        router.push('logout')
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  },
   getClassList({ commit }) {
-    commit('SET_LOADING', true)
     axios
       .get('/api/v1/get_class_list')
       .then(response => {
         commit('SET_CLASS_LIST', response.data.class_list)
-        commit('SET_LOADING', false)
       })
       .catch(e => {
         console.log(e)
@@ -104,7 +134,7 @@ const actions = {
   deleteClass({ dispatch }, id) {
     axios
       .post('/api/v1/delete_class', id)
-      .then(response => {
+      .then(() => {
         dispatch('getClassList')
       })
       .catch(e => {

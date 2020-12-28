@@ -10,7 +10,7 @@
       <v-toolbar-title>Пример генерации шаблона</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn
-        @click="logout"
+        @click="$store.dispatch('logout')"
         class="deep-orange--text text--darken-5"
         color="deep-orange lighten-3"
       >
@@ -56,7 +56,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 import InputForm from '@/components/InputForm'
 import AttributesList from '@/components/AttributesList'
 import Class from '@/components/Class'
@@ -92,20 +91,6 @@ export default {
   },
   created() {
     this.$store.dispatch('getClassList')
-  },
-  methods: {
-    logout() {
-      axios
-        .post('/api/v1/logout')
-        .then(response => {
-          this.$store.dispatch('setIsAuthenticated', false)
-
-          this.$router.push('logout')
-        })
-        .catch(error => {
-          console.log(error)
-        })
-    }
   }
 }
 </script>
