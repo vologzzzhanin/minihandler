@@ -23,16 +23,28 @@ const router = new Router({
     {
       path: '/login',
       name: 'login',
-      component: Login
+      component: Login,
+      meta: {
+        layout: 'empty-layout',
+        title: 'Вход в приложение'
+      }
     },
     {
       path: '/home',
       name: 'home',
-      component: Home
+      component: Home,
+      meta: {
+        layout: 'default-layout',
+        title: 'Обработка класса'
+      }
     },
     {
       path: '/404',
-      component: NotFound
+      component: NotFound,
+      meta: {
+        layout: 'empty-layout',
+        title: 'Страница не найдена'
+      }
     },
     {
       path: '*',

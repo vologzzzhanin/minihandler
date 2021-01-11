@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-main>
     <v-container fill-height>
       <v-row justify="center" align-content="center">
         <v-col cols="4">
@@ -43,15 +43,16 @@
     </v-container>
     <v-snackbar v-model="snack" :timeout="3000" color="info">
       {{ loginMassage }}
-
       <v-btn text @click="snack = false">
         Закрыть
       </v-btn>
     </v-snackbar>
-  </v-app>
+  </v-main>
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   name: 'login',
   data: () => ({

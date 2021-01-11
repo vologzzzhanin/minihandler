@@ -1,5 +1,10 @@
 <template>
-  <v-card v-click-outside="closePanel" :class="option.class" outlined>
+  <v-card
+    v-click-outside="closePanel"
+    :class="option.class"
+    elevation="2"
+    outlined
+  >
     <v-expansion-panels v-model="expanded">
       <v-expansion-panel>
         <v-expansion-panel-header>

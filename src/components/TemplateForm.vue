@@ -1,6 +1,10 @@
 <template>
-  <v-card class="pa-2 lime lighten-5" outlined>
-    <v-form>
+  <v-card v-if="showAttributes" class="yellow lighten-4" elevation="2" outlined>
+    <v-card-title>Шаблон наименования</v-card-title>
+    <v-card-subtitle>
+      Пример шаблона, составленного из атрибутов
+    </v-card-subtitle>
+    <v-container>
       <v-row>
         <v-col cols="12">
           <v-text-field
@@ -23,12 +27,12 @@
           ></v-text-field>
         </v-col>
       </v-row>
-    </v-form>
+    </v-container>
   </v-card>
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 export default {
   name: 'template-form',
@@ -36,6 +40,7 @@ export default {
     ...mapState({
       attributes: state => state.class.data.attributes
     }),
+    ...mapGetters(['showAttributes']),
     classTemplate() {
       let template = ''
       this.attributes.forEach(

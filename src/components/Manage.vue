@@ -1,30 +1,27 @@
 <template>
-  <v-row>
-    <v-col cols="auto" class="mr-auto">
-      <v-btn
-        class="pa-2"
-        outlined
-        large
-        fab
-        color="teal lighten-2"
-        @click="$store.dispatch('saveClass')"
-      >
-        <v-icon>mdi-content-save</v-icon>
-      </v-btn>
-    </v-col>
-    <v-col cols="auto">
-      <v-btn
-        class="pa-2"
-        outlined
-        large
-        fab
-        color="red lighten-2"
-        @click="$store.dispatch('resetClass')"
-      >
-        <v-icon>mdi-reload</v-icon>
-      </v-btn>
-    </v-col>
-  </v-row>
+  <v-toolbar flat>
+    <v-btn
+      large
+      fab
+      class="pa-2 teal--text text--darken-3"
+      color="teal lighten-2"
+      @click="$store.dispatch('saveClass')"
+      title="Сохранить"
+    >
+      <v-icon>mdi-content-save</v-icon>
+    </v-btn>
+    <v-spacer></v-spacer>
+    <v-btn
+      large
+      fab
+      class="pa-2 red--text text--darken-2"
+      color="red lighten-2"
+      @click="$store.dispatch('resetClass')"
+      title="Сбросить"
+    >
+      <v-icon>mdi-reload</v-icon>
+    </v-btn>
+  </v-toolbar>
 </template>
 
 <script>

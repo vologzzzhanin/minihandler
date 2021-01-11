@@ -11,7 +11,7 @@ const options =  Object.freeze({
     editAction: 'EDIT_CLASS_NAME',
     rules: [rules.required],
     expanded: '0',
-    class: 'pa-2 mb-2 blue lighten-5'
+    class: 'mb-2 light-blue lighten-5'
   },
   attribute: {
     label: 'Наименование атрибута',
@@ -22,7 +22,7 @@ const options =  Object.freeze({
     rules: [rules.required],
     expanded: '0',
     class: 'pa-2 red lighten-5',
-    listClass: 'pt-2 px-2 mb-2 green lighten-5',
+    listClass: 'mb-2 light-green lighten-5',
     headers: [
       {
         text: 'Атрибут',

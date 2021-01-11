@@ -146,9 +146,19 @@ const actions = {
   }
 }
 
+const getters = {
+  showClass: state => {
+    return state.class.data.className.length > 0
+  },
+  showAttributes: state => {
+    return state.class.data.attributes.length > 0
+  }
+}
+
 export default new Vuex.Store({
   state,
   strict: true,
   mutations,
-  actions
+  actions,
+  getters
 })
