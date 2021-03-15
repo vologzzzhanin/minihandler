@@ -1,86 +1,124 @@
 import json
-from .models import Class
-from django.http import JsonResponse, HttpResponse
-from django.views.decorators.csrf import ensure_csrf_cookie
+
 from django.contrib.auth import authenticate, login, logout
+from django.http import JsonResponse
+from django.views import View
+from django.views.decorators.csrf import ensure_csrf_cookie
+from django.utils.decorators import method_decorator
+
+from .constants import MESSAGES
+from .models import Class
 
 
 @ensure_csrf_cookie
 def get_token(request):
-    return HttpResponse(status=200)
+    message = {'message': 'token received'}
+
+    return JsonResponse(message, status=200)
 
 
-def login_required(function):
+def check_login(function):
     """Проверка логина"""
     def wrapper(request, *args, **kwargs):
         if not request.user.is_authenticated:
-            return HttpResponse(status=403)
+            message = {'message': MESSAGES['login_required']}
+
+            return JsonResponse(message, status=403)
         return function(request, *args, **kwargs)
     return wrapper
 
 
-def login_view(request):
-    try:
+class Login(View):
+    def post(self, request):
         body = json.loads(request.body)
+
         email, password = body['email'], body['password']
-        user = authenticate(email=email, password=password)
-        if user is not None:
-            login(request, user)
-            message = 'Вы успешно авторизовались'
-            status = 200
-        else:
-            message = 'Проверьте правильность ввода Email и пароля'
-            status = 403
-        result = {'message': message}
+
+        try:
+            user = authenticate(email=email, password=password)
+
+            if user is not None:
+                login(request, user)
+
+                message = MESSAGES['successfull_login']
+                status = 200
+            else:
+                message = MESSAGES['unsuccessfull_login']
+                status = 403
+
+            result = {'message': message}
+        except Exception as e:
+            status = 500
+            result = {'error': str(e)}
+
         return JsonResponse(result, status=status)
-    except Exception as e:
-        status = 500
-        result = {'error': str(e)}
-        return JsonResponse(result, status=status)
 
 
-def logout_view(request):
-    logout(request)
-    return HttpResponse(status=200)
+class Logout(View):
+    def post(self, request):
+        logout(request)
+
+        message = {'message': MESSAGES['successfull_logout']}
+
+        return JsonResponse(message, status=200)
 
 
-@login_required
-def save_class(request):
-    try:
+@method_decorator(check_login, name='dispatch')
+class SaveClass(View):
+    def post(self, request):
         body = json.loads(request.body)
+
         id, data = body['id'], body['data']
-        cls, created = Class.objects.update_or_create(
-            pk=id or None,
-            defaults={'data': data},
-        )
-        result = {
-            'class_id': cls.id,
-            'class_data': cls.data
-        }
-        status = 200
-    except Exception as e:
-        print(e)
-        result = {}
-        status = 400
-    return JsonResponse(result, status=status)
+
+        try:
+            cls, created = Class.objects.update_or_create(
+                pk=id or None,
+                defaults={'data': data},
+            )
+            result = {
+                'class_id': cls.id,
+                'class_data': cls.data
+            }
+            status = 200
+        except Exception as e:
+            status = 400
+            result = {'error': str(e)}
+
+        return JsonResponse(result, status=status)
 
 
-@login_required
-def get_class_list(request):
-    class_list = Class.objects.values().order_by(
-        '-timestamp'
-    )[:10]
-    return JsonResponse({
-        'class_list': list(class_list)
-    })
+@method_decorator(check_login, name='dispatch')
+class ClassList(View):
+    def get(self, request):
+        try:
+            class_list = list(
+                Class.objects.values().order_by(
+                    '-timestamp'
+                )[:10]
+            )
+            status = 200
+            result = {'class_list': class_list}
+        except Exception as e:
+            status = 400
+            result = {'error': str(e)}
+
+        return JsonResponse(result, status=status)
 
 
-@login_required
-def delete_class(request):
-    try:
-        id = json.loads(request.body)
-        Class.objects.filter(pk=id).delete()
-        status = 200
-    except Exception:
-        status = 400
-    return JsonResponse({'status': status})
+@method_decorator(check_login, name='dispatch')
+class DeleteClass(View):
+    def post(self, request):
+        body = json.loads(request.body)
+
+        id = body['id']
+
+        try:
+            Class.objects.filter(pk=id).delete()
+
+            status = 200
+            result = {'message': MESSAGES['successfull_deletion']}
+        except Exception as e:
+            status = 400
+            result = {'error': str(e)}
+
+        return JsonResponse(result, status=status)

@@ -1,12 +1,12 @@
 from django.urls import path
 
-from backend.core import views
+from . import views
 
 urlpatterns = [
     path('get_token', views.get_token),
-    path('login', views.login_view),
-    path('logout', views.logout_view),
-    path('save_class', views.save_class),
-    path('get_class_list', views.get_class_list),
-    path('delete_class', views.delete_class)
+    path('login', views.Login.as_view()),
+    path('logout', views.Logout.as_view()),
+    path('save_class', views.SaveClass.as_view()),
+    path('class_list', views.ClassList.as_view()),
+    path('delete_class', views.DeleteClass.as_view())
 ]

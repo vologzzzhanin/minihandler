@@ -94,7 +94,7 @@ const actions = {
   },
   getClassList({ commit }) {
     axios
-      .get('/api/v1/get_class_list')
+      .get('/api/v1/class_list')
       .then(response => {
         commit('SET_CLASS_LIST', response.data.class_list)
       })
